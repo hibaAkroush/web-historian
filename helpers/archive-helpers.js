@@ -1,6 +1,8 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var LineByLineReader = require('line-by-line');
+
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -26,9 +28,25 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(callback) {
+
+    lr = new LineByLineReader('sites.txt');
+
+lr.on('error', function (err) {
+	
+});
+
+lr.on('line', function (line) {
+
+});
+
+lr.on('end', function () {
+	
+});
+
 };
 
 exports.isUrlInList = function(url, callback) {
+
 };
 
 exports.addUrlToList = function(url, callback) {
