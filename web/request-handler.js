@@ -4,7 +4,7 @@ var archive = require('../helpers/archive-helpers');
 // require more modules/folders here!
 var http = require('http')
 var fs = require('fs');
-
+var httpHelpers = require("./http-helpers.js")
 
 // var loadindex=function(req,res){
 
@@ -29,24 +29,83 @@ var fs = require('fs');
 // }
 
 exports.handleRequest = function (req, res) {
-	status = 200
-if (req.url ==="/arglebargle") {
-status = 404
-}
+// 	status = 200
+// if (req.url ==="/arglebargle") {
+// status = 404
+// }
+if(req.method==='GET'){
 fs.readFile(archive.paths.siteAssets+'/index.html', function (err, html) {       
 res.writeHeader(status, {"Content-Type": "text/html"});  
 res.write(html);
 res.write(req.url)
-res.end();  
+res.end();
     
 });
+
+	
+
+}
 if(req.method==='POST'){
 
-	fs.appendFile(archive.paths.list,req.url, function (err) {
-		res.end();
-});
-}	
+var data="";
+  req.on('data',function(chunk){
+    data+=chunk;
+    var d =data.split('=')[1];
+    //  console.log(archive.paths.siteAssets,"========siteAssets=====>");
+    // console.log(archive.paths.archivedSites,"========archivedSites=========>");
+    // console.log(archive.paths.list,"=========list============>");
 
+    archive.isUrlInList(d,function(found){
+    	if(found){
+    		archive.isUrlArchived(url,function(exists){
+    			if (exists) {
+    				httpHelpers.sendRedirect(res,"/"+d)
+    			}
+    		})
+    	}else {
+    		archive.assUrlToList(d,function(){
+    			httpHelpers.sendRedirect(res,"/loading.html")
+    		})
+
+    	}
+
+    })
+    fs .appendFile(archive.paths.urls, d+"\n" , function (err) { 
+    	
+    
+    if (err)
+        console.log(err);
+    else{
+        console.log('Append operation complete.');
+        res.writeHeader(302, {"Content-Type": "text/html"}); 
+        res.end();
+    }
+    
+
+});
+   });
+
+  
+	
+}	
+archive.readListOfUrls()
+//   		fs.write(archive.paths.list, 'data to append', function (err) {
+//         if (err) throw err;
+//         console.log('Saved!');
+// });
+//   //req.end();
+// fs.open(archive.paths.list, 'w', (err, fd) => {
+
+// });
+    // var file = fs.openSync("/Users/rbk7/Desktop/" + '/sites.txt', 'w');
+
+   // fs.closeSync(file);
+
+// 	console.log(url,'this is me');
+// 		fs.appendFile(archive.paths.list,url, function (err) {
+// 		res.end();
+
+// })
 // fs.readFile(archive.paths.archivedSites+req.url, function (err, html) {    
 // res.writeHeader(200, {"Content-Type": "text/html"});  
 // res.write(html);  
