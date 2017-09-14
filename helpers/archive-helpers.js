@@ -1,7 +1,6 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
-var LineByLineReader = require('line-by-line');
 
 
 /*
@@ -27,21 +26,17 @@ exports.initialize = function(pathsObj) {
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-exports.readListOfUrls = function(callback) {
-
-    lr = new LineByLineReader('sites.txt');
-
-lr.on('error', function (err) {
-	
+exports.readListOfUrls = function() {
+ 
+   fs.readFile(list, 'utf8', function (err,data) {
+  if (err) {
+    return console.log(err);
+  }
+  result=data.split('');
+  
+  console.log(data);
 });
-
-lr.on('line', function (line) {
-
-});
-
-lr.on('end', function () {
-	
-});
+ return result;
 
 };
 

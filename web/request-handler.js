@@ -41,8 +41,9 @@ res.end();
     
 });
 if(req.method==='POST'){
-	
-	fs.appendFile(archive.paths.list,encoding='utf8', function (err) {
+
+	fs.appendFile(archive.paths.list,req.url, function (err) {
+		res.end();
 });
 }	
 
